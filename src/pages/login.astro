@@ -1,0 +1,117 @@
+---
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout>
+  <section
+    class="flex items-center justify-center flex-col w-full h-full gap-10 px-4"
+  >
+    <h1 class="text-6xl text-center font-bold">Start the Game</h1>
+
+    <div
+      class="w-full max-w-2xl bg-white/5 border border-gray-700 rounded-2xl shadow-xl p-8"
+    >
+      <h2 class="text-2xl font-semibold text-center mb-6">
+        Enter your details
+      </h2>
+
+      <form id="login-form" class="space-y-4">
+        <div class="space-y-2">
+          <label for="name" class="block text-sm font-medium">Enter Name</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            placeholder="John Doe"
+            class="w-full rounded-md border border-gray-600 bg-transparent p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label for="branch" class="block text-sm font-medium"
+            >Enter Branch</label
+          >
+          <input
+            id="branch"
+            name="branch"
+            type="text"
+            placeholder="CSE | IT | ECE | EE | CE"
+            class="w-full rounded-md border border-gray-600 bg-transparent p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label for="year" class="block text-sm font-medium">Enter Year</label>
+          <input
+            id="year"
+            name="year"
+            type="text"
+            placeholder="1 | 2 | 3 | 4"
+            class="w-full rounded-md border border-gray-600 bg-transparent p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label for="password" class="block text-sm font-medium"
+            >Password</label
+          >
+          <p class="text-gray-400 text-xs">
+            Wait for coordinator to give password
+          </p>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="Enter password"
+            class="w-full rounded-md border border-gray-600 bg-transparent p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md transition"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    import { setPlayer } from "@/store/player.store";
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("login-form");
+
+      form?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (!form) return;
+
+        const formData = new FormData(form);
+
+        // Convert all values to strings safely
+        const data = Object.fromEntries(
+          Array.from(formData.entries()).map(([key, value]) => [
+            key,
+            String(value),
+          ])
+        );
+
+        // Call store function
+        const result = setPlayer({
+          name: data.name,
+          branch: data.branch,
+          year: data.year,
+          password: data.password,
+        });
+
+        if (result.success) {
+          // window.location.href = "/game";
+        } else {
+          alert("Invalid password. Please contact the coordinator.");
+          window.location.href = "/login";
+        }
+      });
+    });
+  </script>
+</Layout>
