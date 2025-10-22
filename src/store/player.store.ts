@@ -1,5 +1,6 @@
 import { persistentMap as map } from "@nanostores/persistent";
 
+// Persistent map can only
 const player = map("player", {
   name: "",
   isSignedIn: "false",
@@ -42,7 +43,7 @@ export function setPlayer({
 
 export function getPlayer() {
   const user = player.get();
-  if (!user || !user.isSignedIn) {
+  if (!user || user.isSignedIn === "false") {
     return null;
   }
   return user;
