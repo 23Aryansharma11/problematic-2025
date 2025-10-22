@@ -1,0 +1,21 @@
+{
+	"name": "problematic-2025",
+	"type": "module",
+	"version": "0.0.1",
+	"scripts": {
+		"dev": "astro dev",
+		"build": "astro build",
+		"preview": "astro build && wrangler pages dev",
+		"astro": "astro",
+		"deploy": "astro build && wrangler pages deploy",
+		"cf-typegen": "wrangler types"
+	},
+	"dependencies": {
+		"@astrojs/cloudflare": "^12.6.10",
+		"astro": "^5.14.8"
+	},
+	"devDependencies": {
+		"@types/node": "^24.9.1",
+		"wrangler": "^4.44.0"
+	}
+}
