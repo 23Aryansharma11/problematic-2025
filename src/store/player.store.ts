@@ -1,14 +1,10 @@
-import { atom, map } from "nanostores";
+import { persistentMap as map } from "@nanostores/persistent";
 
-// export const user = atom("");
-export const branch = atom("");
-export const year = atom("");
-
-const player = map({
+const player = map("player", {
   name: "",
-  isSignedIn: false,
+  isSignedIn: "false",
   branch: "",
-  year: 0,
+  year: "",
 });
 
 // Login user
@@ -20,7 +16,7 @@ export function setPlayer({
 }: {
   name: string;
   branch: string;
-  year: number;
+  year: string;
   password: string;
 }) {
   // Check if password is correct
@@ -38,7 +34,7 @@ export function setPlayer({
     name,
     branch,
     year,
-    isSignedIn: true,
+    isSignedIn: "true",
   });
 
   return { success: true };
@@ -55,8 +51,8 @@ export function getPlayer() {
 export function unSetPlayer() {
   player.set({
     name: "",
-    isSignedIn: false,
+    isSignedIn: "false",
     branch: "",
-    year: 0,
+    year: "",
   });
 }
