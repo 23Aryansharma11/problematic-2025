@@ -11,5 +11,4 @@ export default defineConfig({
     },
     imageService: "cloudflare",
   }),
-  output: "static",
 });
