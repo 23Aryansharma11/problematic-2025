@@ -1,4 +1,5 @@
 ---
+import Timer from "@/components/timer.astro";
 import Layout from "./Layout.astro";
 ---
 
@@ -7,9 +8,7 @@ import Layout from "./Layout.astro";
     class="w-full bg-gray-900 border-b border-gray-700 shadow-md py-4 px-6 flex items-center justify-between"
   >
     <h1 class="text-xl font-bold text-white">Problematic 2k25</h1>
-
-    <p id="timer" class="text-xl font-semibold text-red-400">30:00</p>
-
+    <Timer />
     <div id="player-info" class="flex items-center gap-6 text-gray-200 text-sm">
       <p id="name"></p>
       <p id="branch"></p>
@@ -42,34 +41,5 @@ import Layout from "./Layout.astro";
     if (nameEl) nameEl.textContent = name;
     if (branchEl) branchEl.textContent = branch;
     if (yearEl) yearEl.textContent = `Year ${year}`;
-
-    // timer
-    let timeRemaining = 30 * 60; // 30 minutes 
-    const timerEl = document.getElementById("timer");
-
-    if (!timerEl) {
-      return;
-    }
-
-    const updateTimer = () => {
-      const minutes = Math.floor(timeRemaining / 60);
-      const seconds = timeRemaining % 60;
-      timerEl.textContent = `${minutes.toString().padStart(2, "0")}:${seconds
-        .toString()
-        .padStart(2, "0")}`;
-    };
-
-    updateTimer();
-
-    const timerInterval = setInterval(() => {
-      if (timeRemaining > 0) {
-        timeRemaining--;
-        updateTimer();
-      } else {
-        clearInterval(timerInterval);
-        timerEl.textContent = "Time’s up!";
-        timerEl.classList.replace("text-red-400", "text-yellow-400");
-      }
-    }, 1000);
   });
 </script>
