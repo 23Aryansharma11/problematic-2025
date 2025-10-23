@@ -78,11 +78,16 @@ import Layout from "@/layouts/Layout.astro";
   </section>
 
   <script>
-    import { setPlayer } from "@/store/player.store";
+    import { getPlayer, setPlayer } from "@/store/player.store";
 
     document.addEventListener("DOMContentLoaded", () => {
       const form = document.getElementById("login-form");
-
+      const player = getPlayer();
+      if (player) {
+        window.location.href = "/game";
+        return;
+      }
+      // Handle form submit
       form?.addEventListener("submit", async (e) => {
         e.preventDefault();
         if (!form) return;
@@ -106,7 +111,7 @@ import Layout from "@/layouts/Layout.astro";
         });
 
         if (result.success) {
-          // window.location.href = "/game";
+          window.location.href = "/game";
         } else {
           alert("Invalid password. Please contact the coordinator.");
           window.location.href = "/login";
