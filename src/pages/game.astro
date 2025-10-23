@@ -1,7 +1,85 @@
 ---
 import ProtectedLayout from "@/layouts/protected-layout.astro";
+import Sudoku from "@/games/sudoku.astro";
+import Wordle from "@/games/wordle.astro";
 ---
 
 <ProtectedLayout>
-  <h1>Hi</h1>
+  <div class="flex flex-col items-center justify-center h-[80%] text-white">
+    <!-- Controls -->
+    <div class="flex gap-4 mt-6 w-full justify-around items-center">
+      <button
+        id="prev-btn"
+        class="rounded-xl bg-gray-800 px-5 py-2 font-semibold text-gray-200 hover:bg-gray-700 active:scale-95 transition"
+      >
+        ⬅ Prev
+      </button>
+      <button
+        id="next-btn"
+        class="rounded-xl bg-indigo-600 px-5 py-2 font-semibold text-white hover:bg-indigo-500 active:scale-95 transition"
+      >
+        Next ➡
+      </button>
+    </div>
+
+    <!-- Game Container -->
+    <div
+      id="game-container"
+      class="relative w-full max-w-3xl rounded-2xl p-6 shadow-lg flex-1 overflow-hidden"
+    >
+      <div
+        class="game opacity-100 h-full w-full flex justify-center items-center absolute inset-0"
+        id="game-0"
+      >
+        <Sudoku />
+      </div>
+      <div
+        class="game opacity-0 pointer-events-none h-full w-full flex justify-center items-center absolute inset-0"
+        id="game-1"
+      >
+        <Wordle />
+      </div>
+    </div>
+  </div>
+
+  <!-- JS Logic -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const games = document.querySelectorAll(".game");
+      let current = 0;
+
+      const showGame = (index: number) => {
+        games.forEach((g, i) => {
+          if (i === index) {
+            g.classList.remove("opacity-0", "pointer-events-none");
+            g.classList.add("opacity-100");
+          } else {
+            g.classList.add("opacity-0", "pointer-events-none");
+            g.classList.remove("opacity-100");
+          }
+        });
+      };
+
+      const nextBtn = document.getElementById("next-btn");
+      const prevBtn = document.getElementById("prev-btn");
+      if (!nextBtn || !prevBtn) return;
+
+      nextBtn.addEventListener("click", () => {
+        current = (current + 1) % games.length;
+        showGame(current);
+      });
+
+      prevBtn.addEventListener("click", () => {
+        if (current === 0) return;
+        current = (current - 1 + games.length) % games.length;
+        showGame(current);
+      });
+    });
+  </script>
+
+  <style>
+    .game {
+      transition: opacity 0.4s ease-in-out;
+    }
+  </style>
 </ProtectedLayout>
