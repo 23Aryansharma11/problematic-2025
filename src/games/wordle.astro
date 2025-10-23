@@ -1,1 +1,225 @@
-<h1>Words</h1>
+<div
+  id="wordle-container"
+  class="w-full h-full flex flex-col items-center justify-center p-4"
+>
+  <h1 class="text-white m-4 text-2xl font-bold tracking-wide">Wordle</h1>
+  <div id="board"></div>
+
+  <!-- Rules / Legend -->
+  <div
+    id="rules"
+    class="mt-6 text-gray-300 text-sm max-w-md leading-relaxed text-center"
+  >
+    <p class="mb-2">Guess the hidden 5-letter word in 6 tries.</p>
+    <div class="flex items-center gap-3 mt-2">
+      <div class="tile correct">A</div>
+      <span>= Correct letter, correct spot</span>
+    </div>
+    <div class="flex items-center gap-3 mt-2">
+      <div class="tile present">B</div>
+      <span>= Correct letter, wrong spot</span>
+    </div>
+    <div class="flex items-center gap-3 mt-2">
+      <div class="tile absent">C</div>
+      <span>= Letter not in word</span>
+    </div>
+    <p class="mt-4 italic text-gray-400">
+      Type your guesses using your keyboard and press Enter.
+    </p>
+  </div>
+
+  <div id="message" class="mt-4 text-base"></div>
+</div>
+
+<style is:inline>
+  #wordle-container {
+    text-align: center;
+    background-color: #121213;
+    color: white;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  #board {
+    display: grid;
+    grid-template-columns: repeat(5, 60px);
+    grid-gap: 5px;
+    margin: 20px auto;
+    justify-content: center;
+  }
+
+  .tile {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #3a3a3c;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #121213;
+    color: white;
+    transition: all 0.2s ease;
+  }
+
+  .tile.correct {
+    background-color: #538d4e;
+    border-color: #538d4e;
+  }
+
+  .tile.present {
+    background-color: #b59f3b;
+    border-color: #b59f3b;
+  }
+
+  .tile.absent {
+    background-color: #3a3a3c;
+    border-color: #3a3a3c;
+  }
+
+  #rules .tile {
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+    border-radius: 4px;
+  }
+
+  #message {
+    margin-top: 15px;
+    font-size: 1rem;
+    min-height: 24px;
+    color: #ffb347;
+  }
+
+  #message.success {
+    color: #4ade80;
+  }
+
+  #message.error {
+    color: #f87171;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const solution = "grape";
+    let currentRow = 0;
+    let currentTile = 0;
+    let currentGuess = "";
+
+    const maxRows = 6;
+    const maxCols = 5;
+
+    const board = document.getElementById("board");
+    const messageEl = document.getElementById("message");
+
+    if (!board || !messageEl) return;
+
+    // Build the game board
+    for (let i = 0; i < maxRows; i++) {
+      for (let j = 0; j < maxCols; j++) {
+        const tile = document.createElement("div");
+        tile.classList.add("tile");
+        tile.dataset.row = String(i);
+        tile.dataset.col = String(j);
+        board.appendChild(tile);
+      }
+    }
+
+    function addLetter(letter: string) {
+      if (currentTile >= maxCols) return;
+      const tile = getTile(currentRow, currentTile);
+      if (!tile) return;
+      tile.textContent = letter;
+      currentGuess += letter;
+      currentTile++;
+    }
+
+    function removeLetter() {
+      if (currentTile === 0) return;
+      currentTile--;
+      const tile = getTile(currentRow, currentTile);
+      if (!tile) return;
+      tile.textContent = "";
+      currentGuess = currentGuess.slice(0, -1);
+    }
+
+    function checkGuess() {
+      if (currentGuess.length < maxCols) {
+        showMessage("Not enough letters", "error");
+        return;
+      }
+
+      const guessArray = currentGuess.split("");
+      const solutionArray: (string | null)[] = solution.split("");
+
+      // First pass: mark correct positions
+      guessArray.forEach((letter, i) => {
+        const tile = getTile(currentRow, i);
+        if (!tile) return;
+
+        if (solutionArray[i] === letter) {
+          tile.classList.add("correct");
+          solutionArray[i] = null;
+        }
+      });
+
+      // Second pass: mark present and absent
+      guessArray.forEach((letter, i) => {
+        const tile = getTile(currentRow, i);
+        if (!tile) return;
+        if (!tile.classList.contains("correct")) {
+          if (solutionArray.includes(letter)) {
+            tile.classList.add("present");
+            solutionArray[solutionArray.indexOf(letter)] = null;
+          } else {
+            tile.classList.add("absent");
+          }
+        }
+      });
+
+      if (currentGuess === solution) {
+        showMessage("🎉 Yay! You won!", "success");
+        setTimeout(() => alert("🎉 Yay! You won!"), 500);
+        document.removeEventListener("keydown", handleKeyInput);
+        return;
+      }
+
+      currentRow++;
+      currentTile = 0;
+      currentGuess = "";
+
+      if (currentRow === maxRows) {
+        showMessage(
+          `❌ Game Over! Word was "${solution.toUpperCase()}"`,
+          "error"
+        );
+        document.removeEventListener("keydown", handleKeyInput);
+      }
+    }
+
+    function getTile(row: number, col: number) {
+      return document.querySelector(
+        `.tile[data-row="${row}"][data-col="${col}"]`
+      );
+    }
+
+    function showMessage(text: string, type = "") {
+      if (!messageEl) return;
+      messageEl.textContent = text;
+      messageEl.className = type ? type : "";
+    }
+
+    // Handle keyboard input
+    function handleKeyInput(e: KeyboardEvent) {
+      const key = e.key.toLowerCase();
+      if (key === "enter") checkGuess();
+      else if (key === "backspace") removeLetter();
+      else if (/^[a-z]$/.test(key)) addLetter(key);
+    }
+
+    document.addEventListener("keydown", handleKeyInput);
+  });
+</script>
