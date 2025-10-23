@@ -1,11 +1,12 @@
 ---
-import Welcome from "@/components/Welcome.astro";
+import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
 <Layout>
-  <h1>Home</h1>
+  <div class="w-full h-full flex flex-col gap-2 justify-center items-center">
+    <h1 class="text-6xl font-bold">Problematic 2025</h1>
+    <img src="/logo.png" alt="logo" />
+    <a href="/login" class="px-12 py-2 bg-blue-500 rounded-xl border border-blue-950">Start Playing</a>
+  </div>
 </Layout>
