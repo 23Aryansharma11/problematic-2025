@@ -378,17 +378,22 @@
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const winElement = document.querySelector(".win");
-
-    if (!winElement) return;
+    const allInputs = document.querySelectorAll('input[type="radio"]');
+    const discNames = ["one", "two", "three", "four", "five", "six"];
 
     const checkWin = () => {
-      const opacity = getComputedStyle(winElement).opacity;
-      if (opacity === "1") {
+      const allInC = discNames.every((id) => {
+        const radios = document.getElementsByName(id);
+        return radios[2].checked; // correct index (0, 1, 2)
+      });
+
+      if (allInC) {
+        winElement.style.opacity = "1";
         alert("You Won The Tower of Hanoi!");
-        clearInterval(interval);
       }
     };
 
-    const interval = setInterval(checkWin, 200); 
+    allInputs.forEach((input) => input.addEventListener("change", checkWin));
   });
 </script>
+
