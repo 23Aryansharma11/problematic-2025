@@ -1,3 +1,41 @@
-<div class="w-full h-full flex items-center justify-center">
-  <h1>Sudoku</h1>
+<div class="w-full h-full flex flex-col items-center justify-center p-4">
+  <h2 class="text-red-500 font-bold">Errors: <span id="errors">0</span></h2>
+  <!-- Board -->
+  <div
+    id="board"
+    class="w-[450px] h-[450px] bg-black rounded border flex flex-wrap"
+  >
+  </div>
+  <br />
+  <div
+    id="digits"
+    class="w-[450px] h-[50px] mx-auto flex flex-wrap bg-green-600"
+  >
+  </div>
 </div>
+
+<style is:inline>
+  .tile {
+    width: 48px;
+    height: 48px;
+    border: 1px solid lightgray;
+
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .number {
+    width: 48px;
+    height: 48px;
+    border: 1px solid black;
+
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
+
