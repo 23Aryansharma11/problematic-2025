@@ -377,20 +377,18 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    const observer = new MutationObserver(() => {
-      const winElement = document.querySelector(".win");
+    const winElement = document.querySelector(".win");
 
-      if (!winElement) return;
-      if (getComputedStyle(winElement).opacity === "1") {
+    if (!winElement) return;
+
+    const checkWin = () => {
+      const opacity = getComputedStyle(winElement).opacity;
+      if (opacity === "1") {
         alert("You Won The Tower of Hanoi!");
-        observer.disconnect(); // stop observing after win
+        clearInterval(interval);
       }
-    });
+    };
 
-    observer.observe(document.body, {
-      attributes: true,
-      subtree: true,
-      attributeFilter: ["style", "class"],
-    });
+    const interval = setInterval(checkWin, 200); 
   });
 </script>
