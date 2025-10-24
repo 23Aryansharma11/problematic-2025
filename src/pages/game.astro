@@ -2,6 +2,7 @@
 import ProtectedLayout from "@/layouts/protected-layout.astro";
 import Sudoku from "@/games/sudoku.astro";
 import Wordle from "@/games/wordle.astro";
+import MemoryGame from "@/games/memory-game.astro";
 ---
 
 <ProtectedLayout>
@@ -29,17 +30,23 @@ import Wordle from "@/games/wordle.astro";
       id="game-container"
       class="relative w-full max-w-4xl rounded-2xl p-6 shadow-lg flex-1 overflow-hidden border"
     >
-    <div
-      class="game opacity-100 h-full w-full flex justify-center items-center absolute inset-0"
-      id="game-0"
-    >
-      <Wordle />
-    </div>
+      <div
+        class="game opacity-100 h-full w-full flex justify-center items-center absolute inset-0"
+        id="game-0"
+      >
+        <Wordle />
+      </div>
       <div
         class="game opacity-0 h-full w-full flex justify-center items-center absolute inset-0"
         id="game-1"
       >
         <Sudoku />
+      </div>
+      <div
+        class="game opacity-0 h-full w-full flex justify-center items-center absolute inset-0"
+        id="game-2"
+      >
+        <MemoryGame />
       </div>
     </div>
   </div>
