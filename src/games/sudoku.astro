@@ -1,16 +1,13 @@
 <div class="w-full h-full flex flex-col items-center justify-center p-4">
   <h2 class="text-red-500 font-bold">Errors: <span id="errors">0</span></h2>
-  <!-- Board -->
+  <!-- su-board -->
   <div
-    id="board"
-    class="w-[450px] h-[450px] bg-black rounded border flex flex-wrap"
+    id="su-board"
+    class="w-[450px] h-[450px] rounded flex flex-wrap justify-center items-center p-2"
   >
   </div>
   <br />
-  <div
-    id="digits"
-    class="w-[450px] h-[50px] mx-auto flex flex-wrap bg-green-600"
-  >
+  <div id="digits" class="w-[450px] h-[50px] mx-auto flex flex-wrap gap-0.5">
   </div>
 </div>
 
@@ -29,7 +26,7 @@
   .number {
     width: 48px;
     height: 48px;
-    border: 1px solid black;
+    border: 1px solid white;
 
     font-size: 20px;
     font-weight: bold;
@@ -39,3 +36,72 @@
   }
 </style>
 
+<script>
+  import { sequence } from "astro:middleware";
+  import { date, discriminatedUnion } from "astro:schema";
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // su-board and solution
+    const board = [
+      "--74916-5",
+      "2---6-3-9",
+      "-----7-1-",
+      "-586----4",
+      "--3----9-",
+      "--62--187",
+      "9-4-7---2",
+      "67-83----",
+      "81--45---",
+    ];
+    const solution = [
+      "387491625",
+      "241568379",
+      "569327418",
+      "758619234",
+      "123784596",
+      "496253187",
+      "934176852",
+      "675832941",
+      "812945763",
+    ];
+    let numSelected = null;
+    let tileSelected = null;
+    let errors = 0;
+    // Set game
+    function setDigits() {
+      // Digits 1-9
+      for (let i = 1; i <= 9; i++) {
+        // init number tile
+        let number = document.createElement("div");
+        number.id = String(i);
+        number.innerText = String(i);
+        number.classList.add("number");
+        // add to digits
+        const digitEl = document.getElementById("digits");
+        if (!digitEl) return;
+        digitEl.appendChild(number);
+      }
+    }
+
+    function setboard() {
+      // su-board  9 * 9
+      for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+          let tile = document.createElement("div");
+          tile.id = r.toString() + "-" + c.toString();
+          tile.classList.add("tile");
+          const boardEl = document.getElementById("su-board");
+          if (!boardEl) return;
+          boardEl.appendChild(tile);
+        }
+      }
+    }
+
+    // Load the game
+    window.onload = function () {
+      setDigits();
+      setboard();
+    };
+
+  });
+</script>
