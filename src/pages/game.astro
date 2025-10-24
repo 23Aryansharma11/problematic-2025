@@ -3,6 +3,7 @@ import ProtectedLayout from "@/layouts/protected-layout.astro";
 import Sudoku from "@/games/sudoku.astro";
 import Wordle from "@/games/wordle.astro";
 import MemoryGame from "@/games/memory-game.astro";
+import TowerHanoi from "@/games/tower-hanoi.astro";
 ---
 
 <ProtectedLayout>
@@ -47,6 +48,12 @@ import MemoryGame from "@/games/memory-game.astro";
         id="game-2"
       >
         <MemoryGame />
+      </div>
+      <div
+        class="game opacity-0 h-full w-full flex justify-center items-center absolute inset-0"
+        id="game-2"
+      >
+        <TowerHanoi />
       </div>
     </div>
   </div>
