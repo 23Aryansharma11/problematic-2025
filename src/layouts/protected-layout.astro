@@ -1,0 +1,45 @@
+---
+import Timer from "@/components/timer.astro";
+import Layout from "./Layout.astro";
+---
+
+<Layout>
+  <header
+    class="w-full bg-gray-900 border-b border-gray-700 shadow-md py-4 px-6 flex items-center justify-between"
+  >
+    <h1 class="text-xl font-bold text-white">Problematic 2k25</h1>
+    <!-- <Timer /> -->
+    <div id="player-info" class="flex items-center gap-6 text-gray-200 text-sm">
+      <p id="name"></p>
+      <p id="branch"></p>
+      <p id="year"></p>
+    </div>
+  </header>
+
+  <div class="p-6 h-full">
+    <slot />
+  </div>
+</Layout>
+
+<script>
+  import { getPlayer } from "@/store/player.store";
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // Player data
+    const player = getPlayer();
+    if (!player) {
+      window.location.href = "/login";
+      return;
+    }
+
+    const { name, branch, year } = player;
+
+    const nameEl = document.getElementById("name");
+    const branchEl = document.getElementById("branch");
+    const yearEl = document.getElementById("year");
+
+    if (nameEl) nameEl.textContent = name;
+    if (branchEl) branchEl.textContent = branch;
+    if (yearEl) yearEl.textContent = `Year ${year}`;
+  });
+</script>

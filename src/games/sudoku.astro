@@ -1,0 +1,185 @@
+<div class="w-full h-full flex flex-col items-center justify-center p-4">
+  <h1 class="text-white m-4 text-2xl font-bold tracking-wide">Sudoku</h1>
+  <h2 class="text-red-500 font-bold text-2xl">
+    Errors: <span id="su-errors">0</span>
+  </h2>
+
+  <div
+    id="su-board"
+    class="w-[450px] h-[450px] su-rounded flex flex-wrap justify-center items-center su-p-2"
+  >
+  </div>
+
+  <br />
+  <div
+    id="su-digits"
+    class="w-[450px] h-[50px] mx-auto flex flex-wrap gap-0.5 mt-5"
+  >
+  </div>
+</div>
+
+<style is:inline>
+  .su-tile {
+    width: 48px;
+    height: 48px;
+    border: 1px solid lightgray;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    color: white;
+  }
+  .su-number {
+    width: 48px;
+    height: 48px;
+    border: 1px solid white;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  .su-number-selected {
+    background: rgb(51, 42, 42);
+    color: white;
+  }
+  .su-fixed {
+    background-color: #242427;
+    cursor: not-allowed;
+  }
+  .su-wrong {
+    background-color: #fca5a5 !important;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const suBoard: string[] = [
+      "--74916-5",
+      "2---6-3-9",
+      "-----7-1-",
+      "-586----4",
+      "--3----9-",
+      "--62--187",
+      "9-4-7---2",
+      "67-83----",
+      "81--45---",
+    ];
+
+    const suSolution: string[] = [
+      "387491625",
+      "241568379",
+      "569327418",
+      "758619234",
+      "123784596",
+      "496253187",
+      "934176852",
+      "675832941",
+      "812945763",
+    ];
+
+    let suNumSelected: string | null = null;
+    let suErrors: number = 0;
+    let suGameOver: boolean = false;
+
+    const suDigitsContainer: HTMLElement | null =
+      document.getElementById("su-digits");
+    const suBoardContainer: HTMLElement | null =
+      document.getElementById("su-board");
+    const suErrorDisplay: HTMLElement | null =
+      document.getElementById("su-errors");
+
+    // Early return if any container is missing
+    if (!suDigitsContainer || !suBoardContainer || !suErrorDisplay) return;
+
+    function setSuDigits(): void {
+      for (let i = 1; i <= 9; i++) {
+        const suNumber: HTMLDivElement = document.createElement("div");
+        suNumber.innerText = String(i);
+        suNumber.classList.add("su-number");
+        suNumber.addEventListener("click", () => {
+          if (suGameOver) return;
+          const numEls: NodeListOf<Element> =
+            document.querySelectorAll(".su-number");
+          numEls.forEach((n) => n.classList.remove("su-number-selected"));
+          suNumber.classList.add("su-number-selected");
+          suNumSelected = suNumber.innerText;
+        });
+        if (!suDigitsContainer) return;
+        suDigitsContainer.appendChild(suNumber);
+      }
+    }
+
+    function setSuBoard(): void {
+      for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+          const suTile: HTMLDivElement = document.createElement("div");
+          suTile.id = `su-${r}-${c}`;
+          suTile.classList.add("su-tile");
+
+          const value: string = suBoard[r][c];
+          if (value !== "-") {
+            suTile.innerText = value;
+            suTile.classList.add("su-fixed");
+          } else {
+            suTile.addEventListener("click", () => onSuTileClick(suTile, r, c));
+          }
+          if (!suBoardContainer) return;
+          suBoardContainer.appendChild(suTile);
+        }
+      }
+    }
+
+    function onSuTileClick(suTile: HTMLElement, r: number, c: number): void {
+      if (suGameOver || !suNumSelected || suTile.classList.contains("su-fixed"))
+        return;
+
+      if (suSolution[r][c] === suNumSelected) {
+        suTile.innerText = suNumSelected;
+        if (checkSuWin()) endSuGame(true);
+      } else {
+        suErrors++;
+        if (suErrorDisplay) suErrorDisplay.innerText = suErrors.toString();
+        suTile.classList.add("su-wrong");
+        setTimeout(() => suTile.classList.remove("su-wrong"), 500);
+        if (suErrors >= 5) endSuGame(false);
+      }
+    }
+
+    function checkSuWin(): boolean {
+      const suTiles: NodeListOf<Element> =
+        document.querySelectorAll(".su-tile");
+      for (const tile of suTiles) {
+        const suTile = tile as HTMLElement;
+        if (
+          !suTile.classList.contains("su-fixed") &&
+          (!suTile.innerText || suTile.innerText.trim() === "")
+        ) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function endSuGame(won: boolean): void {
+      suGameOver = true;
+      // Disable all numbers and tiles by cloning (removes listeners)
+      const numEls: NodeListOf<Element> =
+        document.querySelectorAll(".su-number");
+      numEls.forEach((num) => num.replaceWith(num.cloneNode(true)));
+      const tileEls: NodeListOf<Element> =
+        document.querySelectorAll(".su-tile");
+      tileEls.forEach((tile) => tile.replaceWith(tile.cloneNode(true)));
+      setTimeout(() => {
+        alert(won ? "🎉 You solved it!" : "❌ Game Over!");
+      }, 200);
+    }
+
+    setSuDigits();
+    setSuBoard();
+  });
+</script>

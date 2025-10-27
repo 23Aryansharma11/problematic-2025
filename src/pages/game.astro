@@ -1,0 +1,111 @@
+---
+import ProtectedLayout from "@/layouts/protected-layout.astro";
+import Sudoku from "@/games/sudoku.astro";
+import Wordle from "@/games/wordle.astro";
+import MemoryGame from "@/games/memory-game.astro";
+import TowerHanoi from "@/games/tower-hanoi.astro";
+---
+
+<ProtectedLayout>
+  <div
+    class="flex flex-col items-center justify-center h-full text-white gap-4"
+  >
+    <!-- Controls -->
+    <div class="flex gap-4 mt-6 w-full justify-around items-center">
+      <button
+        id="prev-btn"
+        class="rounded-xl bg-gray-800 px-5 py-2 font-semibold text-gray-200 hover:bg-gray-700 active:scale-95 transition"
+      >
+        ⬅ Prev
+      </button>
+      <button
+        id="next-btn"
+        class="rounded-xl bg-indigo-600 px-5 py-2 font-semibold text-white hover:bg-indigo-500 active:scale-95 transition"
+      >
+        Next ➡
+      </button>
+    </div>
+
+    <!-- Game Container -->
+    <div
+      id="game-container"
+      class="relative w-full max-w-8xl rounded-2xl p-6 shadow-lg flex-1 overflow-hidden border"
+    >
+      <div
+        class="game opacity-100 h-full w-full flex justify-center items-center absolute inset-0"
+        id="game-0"
+      >
+        <TowerHanoi />
+      </div>
+      <div
+        class="game opacity-0 h-full w-full flex justify-center items-center absolute inset-0"
+        id="game-1"
+      >
+        <Sudoku />
+      </div>
+      <div
+        class="game opacity-0 h-full w-full flex justify-center items-center absolute inset-0"
+        id="game-2"
+      >
+        <MemoryGame />
+      </div>
+      <div
+        class="game opacity-0 h-full w-full flex justify-center items-center absolute inset-0"
+        id="game-2"
+      >
+        <Wordle />
+      </div>
+    </div>
+  </div>
+
+  <!-- JS Logic -->
+  <script>
+    import { getTimeRemaining, resetTimer, timer } from "@/store/timer.store";
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const games = document.querySelectorAll(".game");
+      let current = 0;
+
+      // instant stop if time over
+      timer.subscribe((time) => {
+        if (time == 0) {
+          resetTimer();
+          window.location.href = "/result";
+        }
+      });
+
+      const showGame = (index: number) => {
+        games.forEach((g, i) => {
+          if (i === index) {
+            g.classList.remove("opacity-0", "pointer-events-none");
+            g.classList.add("opacity-100");
+          } else {
+            g.classList.add("opacity-0", "pointer-events-none");
+            g.classList.remove("opacity-100");
+          }
+        });
+      };
+
+      const nextBtn = document.getElementById("next-btn");
+      const prevBtn = document.getElementById("prev-btn");
+      if (!nextBtn || !prevBtn) return;
+
+      nextBtn.addEventListener("click", () => {
+        current = (current + 1) % games.length;
+        showGame(current);
+      });
+
+      prevBtn.addEventListener("click", () => {
+        if (current === 0) return;
+        current = (current - 1 + games.length) % games.length;
+        showGame(current);
+      });
+    });
+  </script>
+
+  <style>
+    .game {
+      transition: opacity 0.4s ease-in-out;
+    }
+  </style>
+</ProtectedLayout>

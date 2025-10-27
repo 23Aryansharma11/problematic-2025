@@ -1,0 +1,227 @@
+<div
+  id="wr-wordle-container"
+  class="w-full h-full flex flex-col items-center justify-center p-4 pt-8"
+>
+  <h1 class="text-white text-2xl font-bold tracking-wide">Wordle</h1>
+  <div id="wr-board"></div>
+
+  <!-- Rules / Legend -->
+  <div
+    id="wr-rules"
+    class="mt-6 text-gray-300 text-sm max-w-md leading-relaxed text-center"
+  >
+    <p class="mb-2">Guess the hidden 5-letter word in 6 tries.</p>
+    <div class="flex items-center gap-3 mt-2">
+      <div class="wr-tile wr-correct">A</div>
+      <span>= Correct letter, correct spot</span>
+    </div>
+    <div class="flex items-center gap-3 mt-2">
+      <div class="wr-tile wr-present">B</div>
+      <span>= Correct letter, wrong spot</span>
+    </div>
+    <div class="flex items-center gap-3 mt-2">
+      <div class="wr-tile wr-absent">C</div>
+      <span>= Letter not in word</span>
+    </div>
+    <p class="mt-4 bold text-gray-400">
+      Type your guesses using your keyboard and press Enter.
+    </p>
+  </div>
+
+  <div id="wr-message" class="mt-4 text-base"></div>
+</div>
+
+<style is:inline>
+  #wr-wordle-container {
+    text-align: center;
+    color: white;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  #wr-board {
+    display: grid;
+    grid-template-columns: repeat(5, 60px);
+    grid-gap: 5px;
+    margin: 20px auto;
+    justify-content: center;
+  }
+
+  .wr-tile {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #3a3a3c;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #121213;
+    color: white;
+    transition: all 0.2s ease;
+  }
+
+  .wr-tile.wr-correct {
+    background-color: #538d4e;
+    border-color: #538d4e;
+  }
+  .wr-tile.wr-present {
+    background-color: #b59f3b;
+    border-color: #b59f3b;
+  }
+  .wr-tile.wr-absent {
+    background-color: #3a3a3c;
+    border-color: #3a3a3c;
+  }
+
+  #wr-rules .wr-tile {
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+    border-radius: 4px;
+  }
+
+  #wr-message {
+    margin-top: 15px;
+    font-size: 1rem;
+    min-height: 24px;
+    color: #ffb347;
+  }
+
+  #wr-message.wr-success {
+    color: #4ade80;
+  }
+  #wr-message.wr-error {
+    color: #f87171;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const solution: string = "aryan";
+    let currentRow: number = 0;
+    let currentTile: number = 0;
+    let currentGuess: string = "";
+
+    const maxRows: number = 6;
+    const maxCols: number = 5;
+
+    const board: HTMLElement | null = document.getElementById("wr-board");
+    const messageEl: HTMLElement | null = document.getElementById("wr-message");
+
+    if (!board || !messageEl) return;
+
+    // Build the game board
+    for (let i = 0; i < maxRows; i++) {
+      for (let j = 0; j < maxCols; j++) {
+        const tile: HTMLDivElement = document.createElement("div");
+        tile.classList.add("wr-tile");
+        tile.dataset.row = String(i);
+        tile.dataset.col = String(j);
+        board.appendChild(tile);
+      }
+    }
+
+    function addLetter(letter: string): void {
+      if (currentTile >= maxCols) return;
+      const tile = getTile(currentRow, currentTile);
+      if (!tile) return;
+      tile.textContent = letter;
+      currentGuess += letter;
+      currentTile++;
+    }
+
+    function removeLetter(): void {
+      if (currentTile === 0) return;
+      currentTile--;
+      const tile = getTile(currentRow, currentTile);
+      if (!tile) return;
+      tile.textContent = "";
+      currentGuess = currentGuess.slice(0, -1);
+    }
+
+    function checkGuess(): void {
+      if (currentGuess.length < maxCols) {
+        showMessage("Not enough letters", "wr-error");
+        return;
+      }
+
+      const guessArray: string[] = currentGuess.split("");
+      const solutionArray: (string | null)[] = solution.split("");
+
+      // First pass: mark correct positions
+      guessArray.forEach((letter, i) => {
+        const tile = getTile(currentRow, i);
+        if (!tile) return;
+        if (solutionArray[i] === letter) {
+          tile.classList.add("wr-correct");
+          solutionArray[i] = null;
+        }
+      });
+
+      // Second pass: mark present and absent
+      guessArray.forEach((letter, i) => {
+        const tile = getTile(currentRow, i);
+        if (!tile) return;
+        if (!tile.classList.contains("wr-correct")) {
+          if (solutionArray.includes(letter)) {
+            tile.classList.add("wr-present");
+            // Mark as used
+            solutionArray[solutionArray.indexOf(letter)] = null;
+          } else {
+            tile.classList.add("wr-absent");
+          }
+        }
+      });
+
+      if (currentGuess === solution) {
+        showMessage("🎉 Yay! You won!", "wr-success");
+        setTimeout(() => alert("🎉 Yay! You won!"), 500);
+        document.removeEventListener(
+          "keydown",
+          handleKeyInput as EventListener
+        );
+        return;
+      }
+
+      currentRow++;
+      currentTile = 0;
+      currentGuess = "";
+
+      if (currentRow === maxRows) {
+        showMessage(
+          `❌ Game Over! Word was "${solution.toUpperCase()}"`,
+          "wr-error"
+        );
+        document.removeEventListener(
+          "keydown",
+          handleKeyInput as EventListener
+        );
+      }
+    }
+
+    function getTile(row: number, col: number): HTMLElement | null {
+      return document.querySelector(
+        `.wr-tile[data-row="${row}"][data-col="${col}"]`
+      ) as HTMLElement | null;
+    }
+
+    function showMessage(text: string, type = ""): void {
+      if (!messageEl) return;
+      messageEl.textContent = text;
+      messageEl.className = type ? type : "";
+    }
+
+    // Handle keyboard input
+    function handleKeyInput(e: KeyboardEvent): void {
+      const key: string = e.key.toLowerCase();
+      if (key === "enter") checkGuess();
+      else if (key === "backspace") removeLetter();
+      else if (/^[a-z]$/.test(key)) addLetter(key);
+    }
+
+    document.addEventListener("keydown", handleKeyInput as EventListener);
+  });
+</script>
