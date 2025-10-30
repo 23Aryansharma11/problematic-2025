@@ -51,7 +51,7 @@ import TowerHanoi from "@/games/tower-hanoi.astro";
       </div>
       <div
         class="game opacity-0 h-full w-full flex justify-center items-center absolute inset-0"
-        id="game-2"
+        id="game-3"
       >
         <Wordle />
       </div>
@@ -60,21 +60,82 @@ import TowerHanoi from "@/games/tower-hanoi.astro";
 
   <!-- JS Logic -->
   <script>
-    import { getTimeRemaining, resetTimer, timer } from "@/store/timer.store";
+    import { incrementSudokuTimer, sudokuStore } from "@/store/sudoku.store";
+    import { resetTimer, timer } from "@/store/timer.store";
 
     document.addEventListener("DOMContentLoaded", () => {
       const games = document.querySelectorAll(".game");
       let current = 0;
+      let activeGameIndex = null;
 
-      // instant stop if time over
+      // Modular game handlers per game index
+      const gameHandlers = [
+        {
+          onOpen: () => {
+            // Tower Hanoi open logic (add if needed)
+            console.log("Tower start");
+          },
+          onClose: () => {
+            // Tower Hanoi close logic (add if needed)
+            console.log("Tower end");
+          },
+        },
+        {
+          onOpen: () => {
+            // check if sudoku already played
+            const suStore = sudokuStore.get();
+            if (suStore.status === "won" || suStore.status == "lost") {
+              alert("Sudoku already played");
+            } else {
+              // Start Sudoku interval
+              window.sudokuInterval = setInterval(() => {
+                incrementSudokuTimer();
+              }, 1000);
+            }
+          },
+          onClose: () => {
+            // Clear Sudoku interval
+            if (window.sudokuInterval) {
+              clearInterval(window.sudokuInterval);
+              window.sudokuInterval = null;
+            }
+          },
+        },
+        {
+          onOpen: () => {
+            // Memory Game open logic (add if needed)
+          },
+          onClose: () => {
+            // Memory Game close logic (add if needed)
+          },
+        },
+        {
+          onOpen: () => {
+            // Wordle open logic (add if needed)
+          },
+          onClose: () => {
+            // Wordle close logic (add if needed)
+          },
+        },
+      ];
+
       timer.subscribe((time) => {
-        if (time == 0) {
+        if (time === 0) {
           resetTimer();
           window.location.href = "/result";
         }
       });
 
-      const showGame = (index: number) => {
+      const showGame = (index) => {
+        // Close previous game if any
+        if (
+          activeGameIndex !== null &&
+          gameHandlers[activeGameIndex]?.onClose
+        ) {
+          gameHandlers[activeGameIndex].onClose();
+        }
+
+        // Show/hide games
         games.forEach((g, i) => {
           if (i === index) {
             g.classList.remove("opacity-0", "pointer-events-none");
@@ -84,7 +145,17 @@ import TowerHanoi from "@/games/tower-hanoi.astro";
             g.classList.remove("opacity-100");
           }
         });
+
+        // Open current game
+        if (gameHandlers[index]?.onOpen) {
+          gameHandlers[index].onOpen();
+        }
+
+        activeGameIndex = index;
       };
+
+      // Initially show first game and trigger open handler
+      showGame(current);
 
       const nextBtn = document.getElementById("next-btn");
       const prevBtn = document.getElementById("prev-btn");
