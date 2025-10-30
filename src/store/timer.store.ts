@@ -13,7 +13,7 @@ export function decrementTimeRemaining() {
 }
 
 export function resetTimer() {
-  timer.set(30 * 60); 
+  timer.set(30 * 60);
 }
 
 export function getTimeRemaining() {

@@ -61,6 +61,7 @@ import TowerHanoi from "@/games/tower-hanoi.astro";
   <!-- JS Logic -->
   <script>
     import { incrementSudokuTimer, sudokuStore } from "@/store/sudoku.store";
+    import { incrementTowerTimer, towerStore } from "@/store/tower.store";
     import { resetTimer, timer } from "@/store/timer.store";
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -73,11 +74,23 @@ import TowerHanoi from "@/games/tower-hanoi.astro";
         {
           onOpen: () => {
             // Tower Hanoi open logic (add if needed)
-            console.log("Tower start");
+            const toStore = towerStore.get();
+            if (toStore.status === "won" || toStore.status == "lost") {
+              alert("Tower already played");
+            } else {
+              // Start Sudoku interval
+              window.towerInterval = setInterval(() => {
+                incrementTowerTimer();
+              }, 1000);
+            }
           },
           onClose: () => {
             // Tower Hanoi close logic (add if needed)
             console.log("Tower end");
+            if (window.towerInterval) {
+              clearInterval(window.towerInterval);
+              window.towerInterval = null;
+            }
           },
         },
         {

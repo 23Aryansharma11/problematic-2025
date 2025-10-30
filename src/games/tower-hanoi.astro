@@ -1,4 +1,6 @@
-<div class="w-full h-full px-4 flex flex-col justify-center items-center relative">
+<div
+  class="w-full h-full px-4 flex flex-col justify-center items-center relative"
+>
   <form>
     <div class="discs">
       <input class="input" id="one" type="text" tabindex="-1" readonly />
@@ -376,11 +378,16 @@
 </style>
 
 <script>
+  import { towerStore } from "@/store/tower.store";
+
   document.addEventListener("DOMContentLoaded", () => {
+    towerStore.set({
+      status: "started",
+    });
     const winElement = document.querySelector(".win");
     const allInputs = document.querySelectorAll('input[type="radio"]');
     const discNames = ["one", "two", "three", "four", "five", "six"];
-
+    const toStore = towerStore.get();
     const checkWin = () => {
       const allInC = discNames.every((id) => {
         const radios = document.getElementsByName(id);
@@ -388,12 +395,14 @@
       });
 
       if (allInC) {
-        winElement.style.opacity = "1";
-        alert("You Won The Tower of Hanoi!");
+        // winElement.style.opacity = "1";
+        // alert("You Won The Tower of Hanoi!");
+        towerStore.set({
+          status: "won",
+        });
       }
     };
 
     allInputs.forEach((input) => input.addEventListener("change", checkWin));
   });
 </script>
-
