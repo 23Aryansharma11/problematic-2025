@@ -307,10 +307,13 @@
       });
     }
 
-    shuffleCard();
-
-    cards.forEach((card) => {
-      card.addEventListener("click", flipCard);
-    });
+    if (memStore.status == "won" || memStore.status == "lost") {
+      return;
+    } else {
+      shuffleCard();
+      cards.forEach((card) => {
+        card.addEventListener("click", flipCard);
+      });
+    }
   });
 </script>

@@ -102,6 +102,13 @@
   import { wordleStore } from "@/store/wordle.store";
 
   document.addEventListener("DOMContentLoaded", () => {
+    if (
+      wordleStore.get().status == "won" ||
+      wordleStore.get().status == "lost"
+    ) {
+      return;
+    }
+
     const solution: string = "aryan";
     let currentRow: number = 0;
     let currentTile: number = 0;

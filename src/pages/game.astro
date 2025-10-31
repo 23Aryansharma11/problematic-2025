@@ -141,7 +141,7 @@ import TowerHanoi from "@/games/tower-hanoi.astro";
             // Wordle open logic (add if needed)
             const woStore = wordleStore.get();
             if (woStore.status === "won" || woStore.status == "lost") {
-              alert("Tower already played");
+              alert("Wordle already played");
             } else {
               // Start Sudoku interval
               window.wordleInterval = setInterval(() => {

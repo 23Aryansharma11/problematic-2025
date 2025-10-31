@@ -159,10 +159,6 @@
         status: "started",
         errors: store.errors,
       });
-      if (window.sudokuInterval) {
-        clearInterval(window.sudokuInterval);
-        window.sudokuInterval = null;
-      }
     }
 
     function checkSuWin(): boolean {
@@ -203,11 +199,20 @@
             status: "lost",
             errors: String(suErrors),
           });
+          if (window.sudokuInterval) {
+            clearInterval(window.sudokuInterval);
+            window.sudokuInterval = null;
+          }
         }
       }, 200);
     }
 
     if (store.status == "won" || store.status == "lost") {
+      if (window.sudokuInterval) {
+        clearInterval(window.sudokuInterval);
+        window.sudokuInterval = null;
+      }
+      return;
     } else {
       setSuDigits();
       setSuBoard();
