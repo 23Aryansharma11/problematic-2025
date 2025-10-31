@@ -1,0 +1,59 @@
+---
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout>
+  <div class="w-full h-screen flex justify-center items-center">
+    <form id="reset-form" class="space-y-4 border p-8 rounded">
+      <div class="space-y-2">
+        <label for="name" class="block text-sm font-medium"
+          >Enter Password</label
+        >
+        <input
+          id="password"
+          name="password"
+          type="password"
+          placeholder=""
+          class="w-60 rounded-md border border-gray-600 bg-transparent p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="w-60 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md transition"
+      >
+        Reset
+      </button>
+    </form>
+  </div>
+</Layout>
+
+<script>
+  import { unSetPlayer } from "@/store/player.store";
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("reset-form") as HTMLFormElement;
+
+    // Handle form submit
+    form?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!form) return;
+      const formData = new FormData(form);
+      // Convert all values to strings safely
+      const data = Object.fromEntries(
+        Array.from(formData.entries()).map(([key, value]) => [
+          key,
+          String(value),
+        ])
+      );
+      if (data.password == "admin-1234") {
+        // clear storage
+        localStorage.clear();
+        // logout user
+        unSetPlayer();
+        // push to home page
+        window.location.href = "/";
+      }
+    });
+  });
+</script>

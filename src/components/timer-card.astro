@@ -1,0 +1,21 @@
+<div class="flex w-full p-4 text-white">
+  <h1 class="text-4xl font-bold">Total Time taken: <span id="res-timer"></span></h1>
+</div>
+
+<script>
+  import { timer } from "@/store/timer.store";
+  document.addEventListener("DOMContentLoaded", () => {
+    const timerElem = document.querySelector("#res-timer");
+
+    if (!timerElem) return;
+
+    const formatTime = (time: number) => {
+      const minutes = Math.floor(time / 60);
+      const seconds = time % 60;
+      return `${minutes.toString().padStart(2, "0")}:${seconds
+        .toString()
+        .padStart(2, "0")}`;
+    };
+    timerElem.textContent = formatTime(timer.get());
+  });
+</script>
