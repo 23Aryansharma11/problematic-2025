@@ -63,6 +63,7 @@ import TowerHanoi from "@/games/tower-hanoi.astro";
     import { incrementSudokuTimer, sudokuStore } from "@/store/sudoku.store";
     import { incrementTowerTimer, towerStore } from "@/store/tower.store";
     import { resetTimer, timer } from "@/store/timer.store";
+    import { incrementMemoryTimer, memoryStore } from "@/store/memory.store";
 
     document.addEventListener("DOMContentLoaded", () => {
       const games = document.querySelectorAll(".game");
@@ -117,9 +118,22 @@ import TowerHanoi from "@/games/tower-hanoi.astro";
         {
           onOpen: () => {
             // Memory Game open logic (add if needed)
+            const memStore = memoryStore.get();
+            if (memStore.status === "won" || memStore.status == "lost") {
+              alert("Memory Game already played");
+            } else {
+              // Start Sudoku interval
+              window.memoryInterval = setInterval(() => {
+                incrementMemoryTimer();
+              }, 1000);
+            }
           },
           onClose: () => {
             // Memory Game close logic (add if needed)
+            if (window.memoryInterval) {
+              clearInterval(window.memoryInterval);
+              window.memoryInterval = null;
+            }
           },
         },
         {
