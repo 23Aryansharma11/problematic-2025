@@ -99,7 +99,16 @@
 </style>
 
 <script>
+  import { wordleStore } from "@/store/wordle.store";
+
   document.addEventListener("DOMContentLoaded", () => {
+    if (
+      wordleStore.get().status == "won" ||
+      wordleStore.get().status == "lost"
+    ) {
+      return;
+    }
+
     const solution: string = "aryan";
     let currentRow: number = 0;
     let currentTile: number = 0;
@@ -178,7 +187,12 @@
 
       if (currentGuess === solution) {
         showMessage("🎉 Yay! You won!", "wr-success");
-        setTimeout(() => alert("🎉 Yay! You won!"), 500);
+        // setTimeout(() => alert("🎉 Yay! You won!"), 500);
+        wordleStore.set({ status: "won" });
+        if (window.wordleInterval) {
+          clearInterval(window.wordleInterval);
+          window.wordleInterval = null;
+        }
         document.removeEventListener(
           "keydown",
           handleKeyInput as EventListener

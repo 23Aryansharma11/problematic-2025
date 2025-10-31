@@ -57,6 +57,8 @@
 </style>
 
 <script>
+  import { sudokuStore } from "@/store/sudoku.store";
+
   document.addEventListener("DOMContentLoaded", () => {
     const suBoard: string[] = [
       "--74916-5",
@@ -150,6 +152,15 @@
       }
     }
 
+    const store = sudokuStore.get();
+
+    if (store.status == "pending") {
+      sudokuStore.set({
+        status: "started",
+        errors: store.errors,
+      });
+    }
+
     function checkSuWin(): boolean {
       const suTiles: NodeListOf<Element> =
         document.querySelectorAll(".su-tile");
@@ -168,6 +179,7 @@
     function endSuGame(won: boolean): void {
       suGameOver = true;
       // Disable all numbers and tiles by cloning (removes listeners)
+
       const numEls: NodeListOf<Element> =
         document.querySelectorAll(".su-number");
       numEls.forEach((num) => num.replaceWith(num.cloneNode(true)));
@@ -175,11 +187,35 @@
         document.querySelectorAll(".su-tile");
       tileEls.forEach((tile) => tile.replaceWith(tile.cloneNode(true)));
       setTimeout(() => {
-        alert(won ? "🎉 You solved it!" : "❌ Game Over!");
+        if (!won) {
+          sudokuStore.set({
+            status: "lost",
+            errors: String(suErrors),
+          });
+          // alert game over
+          alert("Game over");
+        } else {
+          sudokuStore.set({
+            status: "lost",
+            errors: String(suErrors),
+          });
+          if (window.sudokuInterval) {
+            clearInterval(window.sudokuInterval);
+            window.sudokuInterval = null;
+          }
+        }
       }, 200);
     }
 
-    setSuDigits();
-    setSuBoard();
+    if (store.status == "won" || store.status == "lost") {
+      if (window.sudokuInterval) {
+        clearInterval(window.sudokuInterval);
+        window.sudokuInterval = null;
+      }
+      return;
+    } else {
+      setSuDigits();
+      setSuBoard();
+    }
   });
 </script>

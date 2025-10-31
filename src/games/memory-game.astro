@@ -237,7 +237,10 @@
 </style>
 
 <script>
+  import { memoryStore } from "@/store/memory.store";
+
   document.addEventListener("DOMContentLoaded", () => {
+    const memStore = memoryStore.get();
     const cards = document.querySelectorAll(".mg-card");
 
     let matched = 0;
@@ -263,7 +266,12 @@
         matched++;
         if (matched == 8) {
           setTimeout(() => {
-            alert("Won the game");
+            // alert("Won the game");
+            memoryStore.set({ status: "won" });
+            if (window.memoryInterval) {
+              clearInterval(window.memoryInterval);
+              window.memoryInterval = null;
+            }
             shuffleCard();
           }, 500);
         }
@@ -299,10 +307,13 @@
       });
     }
 
-    shuffleCard();
-
-    cards.forEach((card) => {
-      card.addEventListener("click", flipCard);
-    });
+    if (memStore.status == "won" || memStore.status == "lost") {
+      return;
+    } else {
+      shuffleCard();
+      cards.forEach((card) => {
+        card.addEventListener("click", flipCard);
+      });
+    }
   });
 </script>
