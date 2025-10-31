@@ -1,0 +1,29 @@
+<div class="flex w-full p-4 text-white flex-col border gap-8 rounded-2xl">
+  <h1 class="text-4xl font-bold">
+    Memory game
+  </h1>
+  <h1 class="text-4xl font-bold">
+    Time taken: <span id="res-memory-timer"></span>
+  </h1>
+  <h1 class="text-4xl font-bold">
+    Status: <span id="res-memory-status" class="uppercase"></span>
+  </h1>
+</div>
+
+<script>
+  import { formatTime } from "@/lib/utils";
+  import { memoryStore, memoryTimer } from "@/store/memory.store";
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const memStore = memoryStore.get();
+    const memTimer = memoryTimer.get();
+
+    const timerElem = document.querySelector("#res-memory-timer");
+    const statusElem = document.querySelector("#res-memory-status");
+
+    if (!timerElem || !statusElem) return;
+
+    timerElem.textContent = formatTime(memTimer);
+    statusElem.textContent = memStore.status;
+  });
+</script>

@@ -1,0 +1,27 @@
+<div class="flex justify-around items-center w-full p-4 text-white">
+  <h1 id="res-name" class="text-4xl font-bold"></h1>
+  <h2 id="res-branch" class="text-4xl font-bold"></h2>
+  <h3 id="res-year" class="text-4xl font-bold"></h3>
+</div>
+
+<script>
+  import { getPlayer } from "@/store/player.store";
+  document.addEventListener("DOMContentLoaded", () => {
+    const nameElem = document.querySelector("#res-name");
+    const branchElem = document.querySelector("#res-branch");
+    const yearElem = document.querySelector("#res-year");
+
+    const user = getPlayer();
+
+    if (!user || user.isSignedIn !== "true") {
+      window.location.href = "/login";
+      return;
+    }
+
+    if (!nameElem || !branchElem || !yearElem) return;
+
+    nameElem.textContent = user.name;
+    branchElem.textContent = `Branch: ${user.branch}`;
+    yearElem.textContent = `Year: ${user.year}`;
+  });
+</script>

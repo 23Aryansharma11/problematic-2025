@@ -1,0 +1,27 @@
+<div class="flex w-full p-4 text-white flex-col border gap-8 rounded-2xl">
+  <h1 class="text-4xl font-bold">Wordle</h1>
+  <h1 class="text-4xl font-bold">
+    Time taken: <span id="res-wordle-timer"></span>
+  </h1>
+  <h1 class="text-4xl font-bold">
+    Status: <span id="res-wordle-status" class="uppercase"></span>
+  </h1>
+</div>
+
+<script>
+  import { formatTime } from "@/lib/utils";
+  import { wordleStore, wordleTimer } from "@/store/wordle.store";
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const woStore = wordleStore.get();
+    const woTimer = wordleTimer.get();
+
+    const timerElem = document.querySelector("#res-wordle-timer");
+    const statusElem = document.querySelector("#res-wordle-status");
+
+    if (!timerElem || !statusElem) return;
+
+    timerElem.textContent = formatTime(woTimer);
+    statusElem.textContent = woStore.status;
+  });
+</script>

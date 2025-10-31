@@ -1,0 +1,29 @@
+<div class="flex w-full p-4 text-white flex-col border gap-8 rounded-2xl">
+  <h1 class="text-4xl font-bold">
+    Tower of Hanoi
+  </h1>
+  <h1 class="text-4xl font-bold">
+    Time taken: <span id="res-tower-timer"></span>
+  </h1>
+  <h1 class="text-4xl font-bold">
+    Status: <span id="res-tower-status" class="uppercase"></span>
+  </h1>
+</div>
+
+<script>
+  import { formatTime } from "@/lib/utils";
+  import { towerStore, towerTimer } from "@/store/tower.store";
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const toStore = towerStore.get();
+    const toTimer = towerTimer.get();
+
+    const timerElem = document.querySelector("#res-tower-timer");
+    const statusElem = document.querySelector("#res-tower-status");
+
+    if (!timerElem || !statusElem) return;
+
+    timerElem.textContent = formatTime(toTimer);
+    statusElem.textContent = toStore.status;
+  });
+</script>

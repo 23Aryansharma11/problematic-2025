@@ -1,0 +1,22 @@
+---
+import ProtectedLayout from "@/layouts/protected-layout.astro";
+
+import SudokuCard from "@/components/sudoku-card.astro";
+import TimerCard from "@/components/timer-card.astro";
+import TowerCard from "@/components/tower-card.astro";
+import UserProfileCard from "@/components/user-profile-card.astro";
+import MemoryCard from '@/components/memory-card.astro'
+import WordleCard from "@/components/wordle-card.astro";
+---
+
+<ProtectedLayout>
+  <section class="min-h-screen w-full flex flex-col gap-10 overflow-x-hidden">
+    <!-- Player profile -->
+    <UserProfileCard />
+    <TimerCard />
+    <TowerCard />
+    <SudokuCard />
+    <MemoryCard />
+    <WordleCard />
+  </section>
+</ProtectedLayout>

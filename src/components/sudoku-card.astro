@@ -1,0 +1,32 @@
+<div class="flex w-full p-4 text-white flex-col border gap-8 rounded-2xl">
+  <h1 class="text-4xl font-bold">Sudoku</h1>
+  <h1 class="text-4xl font-bold">
+    Time taken: <span id="res-sudoku-timer"></span>
+  </h1>
+  <h1 class="text-4xl font-bold">
+    Status: <span id="res-sudoku-status" class="uppercase"></span>
+  </h1>
+    <h1 class="text-4xl font-bold text-red-500">
+    Errors: <span id="res-sudoku-errors" class="uppercase"></span>
+  </h1>
+</div>
+
+<script>
+  import { formatTime } from "@/lib/utils";
+  import { sudokuStore, sudokuTimer } from "@/store/sudoku.store";
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const suStore = sudokuStore.get();
+    const suTimer = sudokuTimer.get();
+
+    const timerElem = document.querySelector("#res-sudoku-timer");
+    const statusElem = document.querySelector("#res-sudoku-status");
+    const errorElem = document.querySelector("#res-sudoku-errors");
+
+    if (!timerElem || !statusElem || !errorElem) return;
+
+    timerElem.textContent = formatTime(suTimer);
+    statusElem.textContent = suStore.status;
+    errorElem.textContent = suStore.errors;
+  });
+</script>
