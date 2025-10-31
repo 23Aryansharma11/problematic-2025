@@ -268,6 +268,10 @@
           setTimeout(() => {
             // alert("Won the game");
             memoryStore.set({ status: "won" });
+            if (window.memoryInterval) {
+              clearInterval(window.memoryInterval);
+              window.memoryInterval = null;
+            }
             shuffleCard();
           }, 500);
         }

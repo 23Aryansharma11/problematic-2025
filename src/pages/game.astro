@@ -64,6 +64,7 @@ import TowerHanoi from "@/games/tower-hanoi.astro";
     import { incrementTowerTimer, towerStore } from "@/store/tower.store";
     import { resetTimer, timer } from "@/store/timer.store";
     import { incrementMemoryTimer, memoryStore } from "@/store/memory.store";
+    import { incrementWordleTimer, wordleStore } from "@/store/wordle.store";
 
     document.addEventListener("DOMContentLoaded", () => {
       const games = document.querySelectorAll(".game");
@@ -87,7 +88,6 @@ import TowerHanoi from "@/games/tower-hanoi.astro";
           },
           onClose: () => {
             // Tower Hanoi close logic (add if needed)
-            console.log("Tower end");
             if (window.towerInterval) {
               clearInterval(window.towerInterval);
               window.towerInterval = null;
@@ -139,9 +139,22 @@ import TowerHanoi from "@/games/tower-hanoi.astro";
         {
           onOpen: () => {
             // Wordle open logic (add if needed)
+            const woStore = wordleStore.get();
+            if (woStore.status === "won" || woStore.status == "lost") {
+              alert("Tower already played");
+            } else {
+              // Start Sudoku interval
+              window.wordleInterval = setInterval(() => {
+                incrementWordleTimer();
+              }, 1000);
+            }
           },
           onClose: () => {
             // Wordle close logic (add if needed)
+            if (window.wordleInterval) {
+              clearInterval(window.wordleInterval);
+              window.wordleInterval = null;
+            }
           },
         },
       ];

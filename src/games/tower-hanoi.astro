@@ -57,7 +57,7 @@
       <div class="tower b"></div>
       <div class="tower c"></div>
 
-      <div class="win">You win! :)</div>
+      <div class="win"></div>
     </div>
     <div class="bottom"></div>
   </form>
@@ -400,6 +400,10 @@
         towerStore.set({
           status: "won",
         });
+        if (window.towerInterval) {
+          clearInterval(window.towerInterval);
+          window.towerInterval = null;
+        }
       }
     };
 
