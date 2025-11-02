@@ -20,8 +20,8 @@ import Layout from "../layouts/Layout.astro";
   document.addEventListener("DOMContentLoaded", () => {
     // if timer is not between 0 - 30 mins and user is on this page - clear local storage
     const tStore = timer.get();
-    if(tStore == 0){
-      localStorage.clear()
+    if (tStore == 0) {
+      localStorage.clear();
     }
   });
 </script>

@@ -16,6 +16,8 @@
         .toString()
         .padStart(2, "0")}`;
     };
-    timerElem.textContent = formatTime(timer.get());
+
+    const time = (30*60)-timer.get();
+    timerElem.textContent = formatTime(time);
   });
 </script>
