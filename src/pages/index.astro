@@ -4,7 +4,7 @@ import Layout from "../layouts/Layout.astro";
 import ProtectedLayout from "@/layouts/protected-layout.astro";
 ---
 
-<ProtectedLayout>
+<Layout>
   <div class="w-full h-full flex flex-col gap-2 justify-center items-center">
     <h1 class="text-6xl font-bold">Problematic 2025</h1>
     <img src="/logo.png" alt="logo" />
@@ -14,9 +14,10 @@ import ProtectedLayout from "@/layouts/protected-layout.astro";
       >Start Playing</a
     >
   </div>
-</ProtectedLayout>
+</Layout>
 
 <script>
+  import { getPlayer } from "@/store/player.store";
   import { timer, decrementTimeRemaining } from "@/store/timer.store";
   document.addEventListener("DOMContentLoaded", () => {
     // if timer is not between 0 - 30 mins and user is on this page - clear local storage
@@ -24,5 +25,15 @@ import ProtectedLayout from "@/layouts/protected-layout.astro";
     if (tStore == 0) {
       localStorage.clear();
     }
+
+    const player = getPlayer();
+
+    if (!player) return;
+
+    const { isSubmit } = player;
+    if (isSubmit === "true" && !(window.location.pathname == "/result")) {
+      window.location.href = "/result";
+    }
+    
   });
 </script>
