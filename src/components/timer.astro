@@ -4,7 +4,6 @@
   import { timer, decrementTimeRemaining } from "@/store/timer.store";
 
   document.addEventListener("DOMContentLoaded", () => {
-
     const timerEl = document.getElementById("timer");
     if (!timerEl) return;
 
@@ -18,7 +17,12 @@
 
     // Subscribe to store updates re-renders every change
     timer.subscribe((time) => {
-      timerEl.textContent = time > 0 ? formatTime(time) : "Time’s up!";
+      if (time > 0) {
+        timerEl.textContent = formatTime(time);
+      } else {
+        // timerEl.textContent = "Time’s up!";
+        timerEl.textContent = "Timer Over";
+      }
     });
 
     // Update the timer every second

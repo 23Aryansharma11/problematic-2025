@@ -28,7 +28,7 @@ import TowerHanoi from "@/games/tower-hanoi.astro";
         <!-- Submit button -->
         <button
           id="sub-btn"
-          class="rounded-xl bg-indigo-600 px-5 py-2 font-semibold text-white hover:bg-indigo-500 active:scale-95 transition h-[3.5rem]"
+          class="rounded-xl bg-green-600 px-5 py-2 font-semibold text-white hover:bg-green-500 active:scale-95 transition h-14 w-40 ml-auto"
         >
           Submit
         </button>
@@ -225,7 +225,6 @@ import TowerHanoi from "@/games/tower-hanoi.astro";
     });
     const subBtn = document.getElementById("sub-btn");
     subBtn?.addEventListener("click", () => {
-      console.log(subBtn);
       subPlayer();
     });
   </script>

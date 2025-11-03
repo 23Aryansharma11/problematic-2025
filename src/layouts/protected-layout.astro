@@ -42,10 +42,9 @@ import Layout from "./Layout.astro";
     if (branchEl) branchEl.textContent = branch;
     if (yearEl) yearEl.textContent = `Year ${year}`;
 
-    if(isSubmit === "true" && !(window.location.pathname=="/result")){
+    if(isSubmit === "true" && (window.location.pathname!=="/result")){
       window.location.href="/result";
     }
   });
 
-  
 </script>
