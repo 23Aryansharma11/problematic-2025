@@ -11,19 +11,28 @@ import TowerHanoi from "@/games/tower-hanoi.astro";
     class="flex flex-col items-center justify-center h-auto text-white gap-4"
   >
     <!-- Controls -->
-    <div class="flex gap-4 mt-6 w-full justify-around items-center">
+    <div class="flex gap-4 mt-6 w-full justify-between items-center">
       <button
         id="prev-btn"
-        class="rounded-xl bg-gray-800 px-5 py-2 font-semibold text-gray-200 hover:bg-gray-700 active:scale-95 transition"
+        class="ml-[10rem] rounded-xl bg-gray-800 px-5 py-2 font-semibold text-gray-200 hover:bg-gray-700 active:scale-95 transition"
       >
         ⬅ Prev
       </button>
-      <button
-        id="next-btn"
-        class="rounded-xl bg-indigo-600 px-5 py-2 font-semibold text-white hover:bg-indigo-500 active:scale-95 transition"
-      >
-        Next ➡
-      </button>
+      <div class="w-[35%] flex item-center justify-center items-center gap-5">
+        <button
+          id="next-btn"
+          class="h-[3rem] rounded-xl bg-indigo-600 px-5 py-2 font-semibold text-white hover:bg-indigo-500 active:scale-95 transition"
+        >
+          Next ➡
+        </button>
+        <!-- Submit button -->
+        <button
+          id="sub-btn"
+          class="rounded-xl bg-indigo-600 px-5 py-2 font-semibold text-white hover:bg-indigo-500 active:scale-95 transition h-[3.5rem]"
+        >
+          Submit
+        </button>
+      </div>
     </div>
 
     <!-- Game Container -->
@@ -65,6 +74,8 @@ import TowerHanoi from "@/games/tower-hanoi.astro";
     import { resetTimer, timer } from "@/store/timer.store";
     import { incrementMemoryTimer, memoryStore } from "@/store/memory.store";
     import { incrementWordleTimer, wordleStore } from "@/store/wordle.store";
+    4;
+    import { subPlayer } from "@/store/player.store";
 
     document.addEventListener("DOMContentLoaded", () => {
       const games = document.querySelectorAll(".game");
@@ -211,6 +222,11 @@ import TowerHanoi from "@/games/tower-hanoi.astro";
         current = (current - 1 + games.length) % games.length;
         showGame(current);
       });
+    });
+    const subBtn = document.getElementById("sub-btn");
+    subBtn?.addEventListener("click", () => {
+      console.log(subBtn);
+      subPlayer();
     });
   </script>
 
