@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
+import ProtectedLayout from "@/layouts/protected-layout.astro";
 ---
 
 <Layout>
@@ -16,6 +17,7 @@ import Layout from "../layouts/Layout.astro";
 </Layout>
 
 <script>
+  import { getPlayer } from "@/store/player.store";
   import { timer, decrementTimeRemaining } from "@/store/timer.store";
   document.addEventListener("DOMContentLoaded", () => {
     // if timer is not between 0 - 30 mins and user is on this page - clear local storage
@@ -23,5 +25,15 @@ import Layout from "../layouts/Layout.astro";
     if (tStore == 0) {
       localStorage.clear();
     }
+
+    const player = getPlayer();
+
+    if (!player) return;
+
+    const { isSubmit } = player;
+    if (isSubmit === "true" && !(window.location.pathname == "/result")) {
+      window.location.href = "/result";
+    }
+    
   });
 </script>
