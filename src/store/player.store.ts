@@ -57,8 +57,6 @@ export function subPlayer() {
     ...newPlayer,
     isSubmit: "true"
   })
-
-  window.location.href  = "/result";
 }
 
 export function unSetPlayer() {
