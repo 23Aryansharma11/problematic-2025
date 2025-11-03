@@ -1,9 +1,10 @@
 ---
 import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
+import ProtectedLayout from "@/layouts/protected-layout.astro";
 ---
 
-<Layout>
+<ProtectedLayout>
   <div class="w-full h-full flex flex-col gap-2 justify-center items-center">
     <h1 class="text-6xl font-bold">Problematic 2025</h1>
     <img src="/logo.png" alt="logo" />
@@ -13,7 +14,7 @@ import Layout from "../layouts/Layout.astro";
       >Start Playing</a
     >
   </div>
-</Layout>
+</ProtectedLayout>
 
 <script>
   import { timer, decrementTimeRemaining } from "@/store/timer.store";
